@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface TestInfo {
     String author() default "";
-    String version() default "1.0";
+    String version() default "1.0"; // значение по умолчанию уже "1.0"
     String description() default "";
 }
