@@ -17,9 +17,21 @@
     <description>Core classes for test reporting</description>
     <dependencies>
         <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.9.24</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>1.9.24</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>io.github.lyazginad</groupId>
             <artifactId>testing-annotations</artifactId>
             <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.javassist</groupId>
@@ -27,36 +39,20 @@
             <version>3.30.2-GA</version>
         </dependency>
     </dependencies>
-    <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.version>3.9.11</maven.version>
-        <maven.plugin.tools.version>3.15.0</maven.plugin.tools.version>
-        <jackson.version>2.19.0</jackson.version>
-    </properties>
+
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>io.github.lyazginad.testing.agent.TestReportAgent</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <Premain-Class>io.github.lyazginad.testing.agent.TestReportAgent</Premain-Class>
-                            <Can-Redefine-Classes>true</Can-Redefine-Classes>
-                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
