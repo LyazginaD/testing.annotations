@@ -38,4 +38,5 @@ build/
 .DS_Store
 
 ### Maven settings ###
-!**/settings.xml
+
+/settings.xml
