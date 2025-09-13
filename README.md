@@ -120,8 +120,7 @@ Add the required dependencies to your project's pom.xml: xml
 2. Configure the Plugin
 
 Add the plugin to your project's pom.xml:xml
-<!-- -->
-
+<!--Would write test results to /target/test-reports-->
         <plugin>
             <groupId>io.github.lyazginad</groupId>
             <artifactId>testing-annotations-maven-plugin</artifactId>
@@ -135,6 +134,7 @@ Add the plugin to your project's pom.xml:xml
                 <strictScanning>true</strictScanning>
             </configuration>
         </plugin>
+<!--Would write test results to the /test-reports in a project directory-->
 
 3. Plugin Configuration Parameters
    Parameter	Default	Description
