@@ -117,7 +117,7 @@ xml
             <configuration>
                 <!-- Optional settings -->
                 <outputDirectory>${project.build.directory}/test-reports</outputDirectory>
-                <reportFileName>custom-test-report.json</reportFileName>
+                <reportFileName>${project.artifactId}-report.json</reportFileName>
                 <prettyPrint>true</prettyPrint>
                 <generateSampleData>false</generateSampleData>
                 <scanTestClasses>true</scanTestClasses>
