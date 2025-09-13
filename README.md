@@ -102,46 +102,44 @@ mvn clean install
 Usage
 1. Add Dependencies
 
-Add the required dependencies to your project's pom.xml:
-xml
+ <!--Add the required dependencies to your project's pom.xml: xml
+<dependencies>
+    <dependency>
+        <groupId>io.github.lyazginad</groupId>
+        <artifactId>testing-annotations</artifactId>
+        <version>1.0.0</version>
+    </dependency>
 
-//<dependencies>
-//    <dependency>
-//        <groupId>io.github.lyazginad</groupId>
-//        <artifactId>testing-annotations</artifactId>
-//        <version>1.0.0</version>
-//    </dependency>
-
-//    <!-- Optional: Only needed if using core functionality directly -->
-//    <dependency>
-//        <groupId>io.github.lyazginad</groupId>
-//        <artifactId>testing-core</artifactId>
-//        <version>1.0.0</version>
-//    </dependency>
-//</dependencies>
+    <!-- Optional: Only needed if using core functionality directly
+    <dependency>
+        <groupId>io.github.lyazginad</groupId>
+        <artifactId>testing-core</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+</dependencies>-->
 
 2. Configure the Plugin
 
-Add the plugin to your project's pom.xml:
+<!--Add the plugin to your project's pom.xml:
 xml
 
-//<build>
-//    <plugins>
-//        <plugin>
-//            <groupId>io.github.lyazginad</groupId>
-//            <artifactId>testing-annotations-maven-plugin</artifactId>
-//            <version>1.0.0</version>
-//            <configuration>
-//                <outputDirectory>${project.build.directory}/test-reports</outputDirectory>
-//                <reportFileName>custom-test-report.json</reportFileName>
-//                <prettyPrint>true</prettyPrint>
-//                <generateSampleData>false</generateSampleData>
-//                <scanTestClasses>true</scanTestClasses>
-//                <strictScanning>true</strictScanning>
-//            </configuration>
-//        </plugin>
-//    </plugins>
-//</build>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>io.github.lyazginad</groupId>
+            <artifactId>testing-annotations-maven-plugin</artifactId>
+            <version>1.0.0</version>
+            <configuration>
+                <outputDirectory>${project.build.directory}/test-reports</outputDirectory>
+                <reportFileName>custom-test-report.json</reportFileName>
+                <prettyPrint>true</prettyPrint>
+                <generateSampleData>false</generateSampleData>
+                <scanTestClasses>true</scanTestClasses>
+                <strictScanning>true</strictScanning>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>-->
 
 3. Plugin Configuration Parameters
    Parameter	Default	Description
