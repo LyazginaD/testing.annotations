@@ -102,7 +102,7 @@ mvn clean install
 Usage
 1. Add Dependencies
 
- <!--Add the required dependencies to your project's pom.xml: xml
+ Add the required dependencies to your project's pom.xml: xml
 <dependencies>
     <dependency>
         <groupId>io.github.lyazginad</groupId>
@@ -110,19 +110,17 @@ Usage
         <version>1.0.0</version>
     </dependency>
 
-    <!-- Optional: Only needed if using core functionality directly
+    <!-- Optional: Only needed if using core functionality directly-->
     <dependency>
         <groupId>io.github.lyazginad</groupId>
         <artifactId>testing-core</artifactId>
         <version>1.0.0</version>
     </dependency>
-</dependencies>-->
+</dependencies>
 
 2. Configure the Plugin
 
-<!--Add the plugin to your project's pom.xml:
-xml
-
+Add the plugin to your project's pom.xml:xml
 <build>
     <plugins>
         <plugin>
@@ -139,7 +137,7 @@ xml
             </configuration>
         </plugin>
     </plugins>
-</build>-->
+</build>
 
 3. Plugin Configuration Parameters
    Parameter	Default	Description
