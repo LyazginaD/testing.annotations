@@ -1,6 +1,4 @@
-package io.github.lyazginad.testing;
-
-import io.github.lyazginad.testing.annotations.*;
+package io.github.lyazginad.testing.annotations;
 
 public class SampleTest {
 
