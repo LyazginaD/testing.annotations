@@ -12,7 +12,9 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,15 +26,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Maven Mojo for generating comprehensive test reports with custom annotations
  */
-@Mojo(name = "generate-test-report")
+@Mojo(name = "generate-report", defaultPhase = LifecyclePhase.TEST)
 public class TestingReportMojo extends AbstractMojo {
 
-    @Parameter(defaultValue = "${project}", required = true, readonly = true)
-    private MavenProject project;
+    @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true)
+    private String buildDirectory;
+
+    @Parameter(defaultValue = "${project.build.testOutputDirectory}", required = true, readonly = true)
+    private String testOutputDirectory;
+
+    @Parameter(defaultValue = "${project.artifacts}", required = true, readonly = true)
+    private Set<Artifact> artifacts;
 
     @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}/test-reports")
     private String outputDirectory;
@@ -100,16 +109,31 @@ public class TestingReportMojo extends AbstractMojo {
         List<URL> testClassUrls = new ArrayList<>();
 
         // Add test classes directory
-        File testClassesDir = new File(project.getBuild().getTestOutputDirectory());
+        File testClassesDir = new File(testOutputDirectory);
         if (testClassesDir.exists()) {
             testClassUrls.add(testClassesDir.toURI().toURL());
+            getLog().info("Added test classes directory: " + testOutputDirectory);
+        } else {
+            getLog().warn("Test classes directory does not exist: " + testOutputDirectory);
         }
 
-        // Add project dependencies - исправлено приведение типа
-        for (org.apache.maven.artifact.Artifact artifact : project.getArtifacts()) {
-            if (artifact.getArtifactHandler().isAddedToClasspath()) {
-                testClassUrls.add(artifact.getFile().toURI().toURL());
+        // Add project dependencies
+        if (artifacts != null) {
+            for (Artifact artifact : artifacts) {
+                ArtifactHandler handler = artifact.getArtifactHandler();
+                if (handler != null && handler.isAddedToClasspath()) {
+                    File artifactFile = artifact.getFile();
+                    if (artifactFile != null && artifactFile.exists()) {
+                        testClassUrls.add(artifactFile.toURI().toURL());
+                        getLog().debug("Added artifact to classpath: " + artifactFile.getName());
+                    }
+                }
             }
+        }
+
+        if (testClassUrls.isEmpty()) {
+            getLog().warn("No classpath URLs found for scanning");
+            return;
         }
 
         URLClassLoader classLoader = new URLClassLoader(
@@ -118,7 +142,7 @@ public class TestingReportMojo extends AbstractMojo {
         );
 
         // Scan test classes directory
-        scanDirectoryForTests(new File(project.getBuild().getTestOutputDirectory()), report, classLoader);
+        scanDirectoryForTests(new File(testOutputDirectory), report, classLoader);
         getLog().info("Scanning for test classes with custom annotations only");
     }
 
@@ -147,8 +171,7 @@ public class TestingReportMojo extends AbstractMojo {
     }
 
     private void processClassFile(File classFile, TestReport report, ClassLoader classLoader) {
-        String className = getClassNameFromFile(classFile,
-                new File(project.getBuild().getTestOutputDirectory()));
+        String className = getClassNameFromFile(classFile, new File(testOutputDirectory));
 
         try {
             // Trying to load the class, but not handling loading errors
@@ -165,8 +188,14 @@ public class TestingReportMojo extends AbstractMojo {
     }
 
     private String getClassNameFromFile(File classFile, File baseDir) {
-        String path = classFile.getAbsolutePath().substring(baseDir.getAbsolutePath().length() + 1);
-        return path.replace(File.separatorChar, '.').replace(".class", "");
+        String basePath = baseDir.getAbsolutePath();
+        String filePath = classFile.getAbsolutePath();
+
+        if (filePath.startsWith(basePath)) {
+            String relativePath = filePath.substring(basePath.length() + 1);
+            return relativePath.replace(File.separatorChar, '.').replace(".class", "");
+        }
+        return classFile.getName().replace(".class", "");
     }
 
     private void processTestClass(Class<?> clazz, TestReport report) {
@@ -194,6 +223,7 @@ public class TestingReportMojo extends AbstractMojo {
         }
     }
 
+    // Остальные методы остаются без изменений...
     private void generateComprehensiveSampleData(TestReport report) {
         getLog().info("Generating comprehensive sample test data...");
 
@@ -387,6 +417,7 @@ public class TestingReportMojo extends AbstractMojo {
             }
         }
     }
+
     private boolean hasTestingAnnotations(Method method) {
         return method.isAnnotationPresent(TestCase.class) ||
                 method.isAnnotationPresent(Severity.class) ||
