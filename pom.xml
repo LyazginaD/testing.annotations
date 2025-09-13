@@ -75,18 +75,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>io.github.lyazginad</groupId>
-            <artifactId>testing-annotations</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.lyazginad</groupId>
-            <artifactId>testing-core</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
         <!-- Jackson для JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
