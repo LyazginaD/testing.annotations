@@ -135,6 +135,19 @@ Add the plugin to your project's pom.xml:xml
             </configuration>
         </plugin>
 <!--Would write test results to the /test-reports in a project directory-->
+        <plugin>
+            <groupId>io.github.lyazginad</groupId>
+            <artifactId>testing-annotations-maven-plugin</artifactId>
+            <version>1.0.0</version>
+            <configuration>
+                <outputDirectory>${project.build.directory}/test-reports</outputDirectory>
+                <reportFileName>custom-test-report.json</reportFileName>
+                <prettyPrint>true</prettyPrint>
+                <generateSampleData>false</generateSampleData>
+                <scanTestClasses>true</scanTestClasses>
+                <strictScanning>true</strictScanning>
+            </configuration>
+        </plugin>
 
 3. Plugin Configuration Parameters
    Parameter	Default	Description
