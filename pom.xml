@@ -13,6 +13,30 @@
     <description>Custom annotations for enhanced test reporting and classification</description>
     <url>https://github.com/lyazginad/testing.annotations</url>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Lyazgina Daria</name>
+            <email>daria.lyazgina@gmail.com</email>
+            <organizationUrl>https://github.com/lyazginad</organizationUrl>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/lyazginad/testing.annotations</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -24,10 +48,12 @@
     </properties>
 
     <dependencies>
+        <!-- Maven Plugin API -->
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>${maven.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Maven Plugin Annotations -->
@@ -43,14 +69,17 @@
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
             <version>${maven.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
             <version>${maven.version}</version>
+            <scope>provided</scope>
         </dependency>
 
+        <!-- Test frameworks -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -90,8 +119,8 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-    </dependencies>
 
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -101,26 +130,33 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                        <arg>-Xlint:-options</arg>
+                    </compilerArgs>
+                    <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.15.1</version>
+                <configuration>
+                    <goalPrefix>testing</goalPrefix>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-descriptor</id>
                         <phase>process-classes</phase>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                        <configuration>
+                            <goalPrefix>testing</goalPrefix>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>https://opensource.org/licenses/MIT</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 </project>

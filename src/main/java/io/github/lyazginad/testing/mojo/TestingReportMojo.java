@@ -1,5 +1,6 @@
 package io.github.lyazginad.testing.mojo;
 
+import io.github.lyazginad.testing.annotations.*;
 import io.github.lyazginad.testing.model.TestReport;
 import io.github.lyazginad.testing.model.TestResult;
 import io.github.lyazginad.testing.model.StepResult;
@@ -47,6 +48,9 @@ public class TestingReportMojo extends AbstractMojo {
 
     @Parameter(property = "scanTestClasses", defaultValue = "true")
     private boolean scanTestClasses;
+
+    @Parameter(property = "strictScanning", defaultValue = "true")
+    private boolean strictScanning;
 
     @Override
     public void execute() throws MojoExecutionException {
@@ -115,6 +119,7 @@ public class TestingReportMojo extends AbstractMojo {
 
         // Scan test classes directory
         scanDirectoryForTests(new File(project.getBuild().getTestOutputDirectory()), report, classLoader);
+        getLog().info("Scanning for test classes with custom annotations only");
     }
 
     private void scanDirectoryForTests(File directory, TestReport report, ClassLoader classLoader) {
@@ -141,15 +146,19 @@ public class TestingReportMojo extends AbstractMojo {
         }
     }
 
-    private void processClassFile(File classFile, TestReport report, ClassLoader classLoader) throws Exception {
+    private void processClassFile(File classFile, TestReport report, ClassLoader classLoader) {
         String className = getClassNameFromFile(classFile,
                 new File(project.getBuild().getTestOutputDirectory()));
 
         try {
+            // Trying to load the class, but not handling loading errors
             Class<?> clazz = classLoader.loadClass(className);
             processTestClass(clazz, report);
         } catch (ClassNotFoundException e) {
             getLog().debug("Class not found: " + className);
+        } catch (NoClassDefFoundError e) {
+            // Ignoring classes with missing dependencies
+            getLog().debug("Skipping class " + className + " due to missing dependencies: " + e.getMessage());
         } catch (Exception e) {
             getLog().warn("Failed to process class: " + className, e);
         }
@@ -162,7 +171,8 @@ public class TestingReportMojo extends AbstractMojo {
 
     private void processTestClass(Class<?> clazz, TestReport report) {
         for (Method method : clazz.getDeclaredMethods()) {
-            if (AnnotationProcessor.isTestMethod(method)) {
+            // Check only methods with lyazginad.testing annotations
+            if (hasTestingAnnotations(method)) {
                 try {
                     TestResult testResult = new TestResult(
                             clazz.getName(),
@@ -172,10 +182,10 @@ public class TestingReportMojo extends AbstractMojo {
                     );
 
                     AnnotationProcessor.processTestAnnotations(method, testResult);
-                    testResult.markCompleted(true, null); // Assume passed for reporting
+                    testResult.markCompleted(true, null);
 
                     report.addTestResult(testResult);
-                    getLog().info("Found test method: " + clazz.getName() + "." + method.getName());
+                    getLog().info("Found annotated test method: " + clazz.getName() + "." + method.getName());
 
                 } catch (Exception e) {
                     getLog().warn("Failed to process test method: " + method.getName(), e);
@@ -376,5 +386,16 @@ public class TestingReportMojo extends AbstractMojo {
                 }
             }
         }
+    }
+    private boolean hasTestingAnnotations(Method method) {
+        return method.isAnnotationPresent(TestCase.class) ||
+                method.isAnnotationPresent(Severity.class) ||
+                method.isAnnotationPresent(Priority.class) ||
+                method.isAnnotationPresent(TestLevel.class) ||
+                method.isAnnotationPresent(TestType.class) ||
+                method.isAnnotationPresent(TestMethod.class) ||
+                method.isAnnotationPresent(TestInfo.class) ||
+                method.isAnnotationPresent(TestStep.class) ||
+                method.isAnnotationPresent(TestSteps.class);
     }
 }
