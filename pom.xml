@@ -12,6 +12,31 @@
 
     <name>Testing Annotations Parent</name>
     <description>Parent project for testing annotations and plugins</description>
+    <url>https://github.com/lyazginad/testing.annotations</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Lyazgina Daria</name>
+            <email>daria.lyazgina@gmail.com</email>
+            <organizationUrl>https://github.com/lyazginad</organizationUrl>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/LyazginaD/testing.annotations</url>
+        </repository>
+    </distributionManagement>
 
     <modules>
         <module>annotations</module>

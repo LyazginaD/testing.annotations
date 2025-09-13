@@ -102,7 +102,7 @@ mvn clean install
 Usage
 1. Add Dependencies
 
- Add the required dependencies to your project's pom.xml: xml
+Add the required dependencies to your project's pom.xml: xml
  <!-- -->
     <dependency>
         <groupId>io.github.lyazginad</groupId>
@@ -135,7 +135,6 @@ Add the plugin to your project's pom.xml:xml
                 <strictScanning>true</strictScanning>
             </configuration>
         </plugin>
-
 
 3. Plugin Configuration Parameters
    Parameter	Default	Description
